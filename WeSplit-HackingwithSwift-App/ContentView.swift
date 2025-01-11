@@ -8,53 +8,53 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var tapCount = 0
-    @State private var nameTextfieldText = ""
+    // MARK: - Properties
+    @State private var checkAmount = 0.0
+    @State private var numberOfPeople = 2
+    @State private var tipPercentage = 20
+    let tipPercentagesArray = [10, 15, 20, 25, 0]
+    let currencyLocationID = Locale.current.currency?.identifier ?? "USD"
     
+    var totalPerPerson: Double {
+        let peopleCount = Double(numberOfPeople + 2)
+        let tipSelection = Double(tipPercentage)
+        let tipValue = (checkAmount / 100) * tipSelection
+        let grandTotal = checkAmount + tipValue
+        let amountPerPerson = grandTotal / peopleCount
+        
+        
+        return amountPerPerson
+    }
+    
+    // MARK: - Views
     var body: some View {
-        Form {
-            TextField("Enter your name", text: $nameTextfieldText)
-            Text("You name is \(nameTextfieldText)!")
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Amount", value: $checkAmount, format: .currency(code: currencyLocationID))
+                        .keyboardType(.decimalPad)
+                    
+                    Picker("Number of people", selection: $numberOfPeople) {
+                        ForEach(2..<51) {
+                            Text("\($0) people")
+                        }
+                    }
+                }
+                
+                Section {
+                    Picker("Tip percentage", selection: $tipPercentage) {
+                        ForEach(tipPercentagesArray, id: \.self) {
+                            Text($0, format: .percent)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                } header: {
+                    Text("How much tip do you want to leave?")
+                }
+                
+            }
+            .navigationTitle("Bill split app")
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-//        Button("Tap Count: \(tapCount)") {
-//            tapCount += 1
-//        }
-        
-        
-        
-        
-//        NavigationStack {
-//            Form {
-//                Section {
-//                    Text("This new text")
-//                    Text("This new text")
-//                } header: {
-//                    Text("First Section")
-//                }
-//                
-//                Section {
-//                    Text("This new text")
-//                    Text("This new text")
-//                    Text("This new text")
-//                } header: {
-//                    Text("Second Section")
-//                }
-//            }
-//            .navigationTitle("Bill Split App")
-//            .navigationBarTitleDisplayMode(.automatic)
-//        }
     }
 }
 
